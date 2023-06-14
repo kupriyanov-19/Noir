@@ -17,6 +17,7 @@ extern "C" char *strptime(const char *s, const char *f, struct tm *tm) {
     }
     return (char *) (s + input.tellg());
 }
+#endif
 
 std::optional<time_t> StringToDate(const std::string &date) {
     if (date.empty())
@@ -49,43 +50,13 @@ std::optional<time_t> StringToDate(const std::string &date) {
 
     time_t result = mktime(&time);
     if (result >= summer_time && result < winter_time) result -= 3600;
-    return result;
-}
-#else
-std::optional<time_t> StringToDate(const std::string& date) {
-    if (date.empty())
-        return 0;
-
-    std::string pattern;
-    if (date.size() > 5)
-        pattern = "%H:%M %d/%m";
-    else
-        pattern = "%d/%m";
-
-    tm time = {};
-    if (!strptime(date.c_str(), pattern.c_str(), &time))
-        return std::nullopt;
-
-    time.tm_year = 123;
-    tm first = {};
-    first.tm_year = 123;
-    first.tm_mon = 2;
-    first.tm_mday = 27;
-    first.tm_hour = 3;
-    time_t summer_time = mktime(&first);
-
-    tm second = {};
-    second.tm_year = 123;
-    second.tm_mon = 9;
-    second.tm_mday = 30;
-    second.tm_hour = 3;
-    time_t winter_time = mktime(&second);
-
-    time_t result = mktime(&time);
-    if (result >= summer_time && result < winter_time) result -= 3600;
-    return result;
-}
+#ifdef __linux__
+    result+=7200;
 #endif
+
+    return result;
+}
+
 
 
 int main() {
