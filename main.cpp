@@ -50,14 +50,9 @@ std::optional<time_t> StringToDate(const std::string &date) {
 
     time_t result = mktime(&time);
     if (result >= summer_time && result < winter_time) result -= 3600;
-#ifdef __linux__
-    result+=7200;
-#endif
 
     return result;
 }
-
-
 
 int main() {
     std::string s;
