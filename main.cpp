@@ -66,16 +66,16 @@ std::optional<time_t> StringToDate(const std::string& date) {
     if (!strptime(date.c_str(), pattern.c_str(), &time))
         return std::nullopt;
 
-    time.tm_year = 2021;
+    time.tm_year = 123;
     tm first = {};
-    first.tm_year = 2021;
+    first.tm_year = 123;
     first.tm_mon = 2;
     first.tm_mday = 27;
     first.tm_hour = 3;
     time_t summer_time = mktime(&first);
 
     tm second = {};
-    second.tm_year = 2021;
+    second.tm_year = 123;
     second.tm_mon = 9;
     second.tm_mday = 30;
     second.tm_hour = 3;
